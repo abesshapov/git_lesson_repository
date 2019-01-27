@@ -161,10 +161,10 @@ class Example(QWidget):
     def saveFile(self):
         if self.isLoad:
             p = QPixmap(self.pixmap.width(), self.height()
-                        - self.sphere.height() - self.square.height()
+                        - self.sphere.height() - self.square.height() 
                         - self.inc.height())
             self.render(p)
-            p.save(self.name)
+            p.save(self.name) # Сохранение файла с загруженным фоном
         else:
             self.newFile.show()
             self.newFile.move(20, 20)
@@ -178,7 +178,7 @@ class Example(QWidget):
             self.ccolor.hide()
             self.dec.hide()
             self.penc.hide()
-            self.savef.hide()
+            self.savef.hide() # окно сохранения нового файла с новым названием
     
     def save2file(self):
         self.newFile.hide()
@@ -194,7 +194,8 @@ class Example(QWidget):
         self.setWindowTitle('Рисуйте')
         p = QPixmap(500, self.sphere.y())
         self.render(p)
-        p.save(self.newFile.text())
+        p.save(self.newFile.text()) # сохранение нового файла с возможностью
+        # нового названия
         
     def loadf(self):
         self.isLoad = True
@@ -245,7 +246,7 @@ class Example(QWidget):
         self.resize(self.pixmap.width(), self.pixmap.height() +
                     self.sphere.height() + self.square.height() +
                     self.inc.height())
-        self.setWindowTitle('Рисуйте')
+        self.setWindowTitle('Рисуйте') # окно редактора с загруженным фоном
         
     def paint(self):
         self.isNew = True
@@ -283,7 +284,8 @@ class Example(QWidget):
         self.penc.resize(125, self.sphere.height())
         self.penc.setText('Ручка')
         self.setWindowTitle('Рисуйте')
-        self.resize(500, self.dec.y() + self.dec.height())
+        self.resize(500, self.dec.y() + self.dec.height()) # окно редактора с
+        # белым фоном
     
     def gamecb(self):
         c = ''
@@ -308,7 +310,7 @@ class Example(QWidget):
         self.res.setText('                                                    ')
         self.back.show()
         self.setWindowTitle('Быки и коровы')
-        self.resize(290, 150)
+        self.resize(290, 150) # окно игры быки и коровы
         
     def tomenu(self):
         self.lb1.hide()
@@ -337,7 +339,8 @@ class Example(QWidget):
         self.game.show()        
         self.new.show()
         self.setGeometry(300, 300, 300, 155)
-        self.setWindowTitle('Запуск')
+        self.setWindowTitle('Запуск') # реализация кнопки
+        # для возвращения в главное меню
     
     def checkn(self):
         self.turns += 1
@@ -364,7 +367,8 @@ class Example(QWidget):
                     file.write(str(self.turns) + ' ')                
             else:
                 self.res.setText('Коров: ' + str(self.cows) + ', Быков: '
-                                 + str(self.bulls))
+                                 + str(self.bulls)) # проверка заданного числа 
+                # на крупный рогатый скот
      
     def closeEvent(self, e):
         result = QMessageBox.question(self, 'Подтверждение закрытия окна',
@@ -426,25 +430,25 @@ class Example(QWidget):
                     qp.drawRect(point[0], point[1],
                                 point[2], point[2])
             qp.end()            
-    
+     # обработчики событий прорисовки, движения мыши и закрытия программы
     def csphere(self):
-        self.mode = 'sphere'
+        self.mode = 'sphere' 
     
     def csquare(self):
         self.mode = 'square'
     
     def pencil(self):
-        self.mode = 'pen'
+        self.mode = 'pen' # изменение типа фигуры
         
     def incr(self):
         self.size += 2
         
     def decr(self):
         if self.size > 2:
-            self.size -= 2
+            self.size -= 2 # изменение размера кисти
     
     def change(self):
-        self.color = QColorDialog.getColor()
+        self.color = QColorDialog.getColor() # окно выбора цвета
     
     def leaderboard(self):
         self.leaders.hide()
@@ -491,7 +495,8 @@ class Example(QWidget):
         self.lb3.move(30, 70)
         self.lb3.resize(200, self.lb3.height())
         self.setWindowTitle('Доска лидеров')
-        self.resize(200, 200)
+        self.resize(200, 200) # Прочитываем результаты из файла с ходами,
+        # выводим до трех лучших результатов 
         
                 
 if __name__ == '__main__':
