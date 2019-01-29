@@ -1,8 +1,9 @@
 import sys
 import math
 import random
+from PIL import Image
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QPainter, QColor, QPixmap
+from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 
@@ -25,8 +26,16 @@ class Example(QWidget):
         self.color2 = QColor(255, 255, 255)
         self.isLoad = False
         self.isNew = False
+        im = Image.new('RGB', (700, 700), 'white')
+        im.save('test.jpg')
  
     def initUI(self):
+        im1 = QImage('test.jpg')
+        im2 = im1.scaled(QSize(self.height(), self.width()))
+        palette = QPalette()
+        palette.setBrush(QPalette.Window, QBrush(im2))
+        self.setPalette(palette)
+        
         self.file_name = QLineEdit(self)
         self.file_name.move(160, 0)
         
@@ -125,6 +134,11 @@ class Example(QWidget):
         self.ccolor.move(0, 0)
         self.ccolor.hide()
         self.ccolor.clicked.connect(self.change)
+        
+        self.eraser = QPushButton('Ластик', self)
+        self.eraser.resize(self.eraser.sizeHint())
+        self.eraser.hide()
+        self.eraser.clicked.connect(self.erasem)
         
         self.save2 = QPushButton('Сохранить', self)
         self.save2.resize(self.save2.sizeHint())
@@ -226,8 +240,12 @@ class Example(QWidget):
         self.inc.show()
         
         self.dec.move(self.inc.width(), self.inc.y())
-        self.dec.resize(self.pixmap.width() / 2, self.inc.height())
+        self.dec.resize(self.pixmap.width() / 4, self.inc.height())
         self.dec.show()
+        
+        self.eraser.move(self.inc.width() + self.dec.width(), self.inc.y())
+        self.eraser.resize(self.pixmap.width() / 4, self.inc.height())
+        self.eraser.show()
         
         self.ccolor.move(self.sphere.width(), self.pixmap.height())
         self.ccolor.resize(self.pixmap.width() / 2, self.inc.height())
@@ -267,6 +285,8 @@ class Example(QWidget):
         self.ccolor.show()
         self.penc.show()
         self.savef.show()
+        self.eraser.show()
+        
         self.setGeometry(300, 300, 500, 500)
         self.sphere.move(0, 400)
         self.sphere.resize(250, self.sphere.height())
@@ -275,13 +295,15 @@ class Example(QWidget):
         self.inc.move(0, self.square.y() + self.square.height())
         self.inc.resize(250, self.sphere.height())
         self.dec.move(self.inc.width(), self.inc.y())
-        self.dec.resize(250, self.sphere.height())
+        self.dec.resize(125, self.sphere.height())
         self.ccolor.move(self.sphere.width(), 400)
         self.ccolor.resize(250, self.sphere.height())
         self.savef.move(375, 400 + self.ccolor.height())
         self.savef.resize(125, self.sphere.height())
         self.penc.move(self.square.width(), 400 + self.ccolor.height())
         self.penc.resize(125, self.sphere.height())
+        self.eraser.move(self.dec.x() + self.dec.width(), self.dec.y())
+        self.eraser.resize(123, self.dec.height())
         self.penc.setText('Ручка')
         self.setWindowTitle('Рисуйте')
         self.resize(500, self.dec.y() + self.dec.height()) # окно редактора с
@@ -409,6 +431,10 @@ class Example(QWidget):
                     qp.setPen(QColor().fromRgb(*point[3]))                 
                     qp.drawRect(point[0], point[1],
                                 point[2], point[2])
+                elif point[5] == 'eraser':
+                    pixmap = QPixmap('test.jpg')
+                    qp.drawPixmap(point[0], point[1], point[2], point[2], pixmap)
+                
             qp.end()
         if self.isNew:
             qp = QPainter()
@@ -429,6 +455,9 @@ class Example(QWidget):
                     qp.setPen(QColor().fromRgb(*point[3]))                 
                     qp.drawRect(point[0], point[1],
                                 point[2], point[2])
+                elif point[5] == 'eraser':
+                    pixmap = QPixmap('test.jpg')
+                    qp.drawPixmap(point[0], point[1], point[2], point[2], pixmap)                
             qp.end()            
      # обработчики событий прорисовки, движения мыши и закрытия программы
     def csphere(self):
@@ -450,6 +479,9 @@ class Example(QWidget):
     def change(self):
         self.color = QColorDialog.getColor() # окно выбора цвета
     
+    def erasem(self):
+        self.mode = 'eraser'
+        
     def leaderboard(self):
         self.leaders.hide()
         self.file_name.hide()
